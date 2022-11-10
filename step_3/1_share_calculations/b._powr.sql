@@ -1,44 +1,5 @@
 -- Notes: POWR_SHARE uses grouped_viewership while DEPT_SHARE uses monthly_viewership
 
--- Insert - Group Viewership
-insert into grouped_viewership (tot_viewership, year_month_day, year, month, quarter, partner, viewership_type)
-select sum(tot_viewership), year_month_day, year, month, quarter, 'powr' as partner, 'VOD' as viewership_type from monthly_viewership
-where year = 2022 and quarter = 'q2'
-group by year_month_day, year, month, quarter
-
--- Check Grouped Viewership
-select * from grouped_viewership where year = 2022 and quarter = 'q2'
-
--- update share on records
-    update powr_viewership p
-    set p.powr_share = q.powr_share
-    from
-    (
-    select p.id as id, p.WATCH_TIME_SECONDS / gv.tot_viewership as powr_share, p.year_month_day from powr_viewership p
-    join grouped_viewership gv on (gv.year_month_day = p.year_month_day)
-    where p.year = 2022 and p.quarter = 'q2' 
-    ) q
-    where p.id = q.id
-
--- REV_PER_HOUR
-update powr_viewership
-        set rev_per_hov = rev_share / tot_hov
-        where year = 2021 and quarter ='q4' and rev_share != 0
-        
-        update powr_viewership
-        set rev_per_mov = rev_per_hov * 60
-        where year = 2021 and quarter ='q4' and rev_share != 0
-        
-        
-        update powr_viewership
-        set rev_per_hov = 0
-        where year = 2021 and quarter ='q4' and rev_share = 0 and rev_per_hov is null
-        
-        update powr_viewership
-        set rev_per_mov = 0
-        where year = 2021 and quarter ='q4' and rev_share = 0 and rev_per_mov is null
-
-
 -- insert viewership by dept and month (firetv & roku)
     insert into  monthly_viewership(tot_viewership, department_id, department_name, year_month_day, usage, quarter, month, year)
     select sum(watch_time_seconds), d.id, d.name, year_month_day, 'powr viewership share' as usage, quarter, month, year from powr_viewership p
@@ -83,3 +44,43 @@ select * from powr_viewership where year = 2022 and quarter = 'q2' and platform 
 
 -- Check MONTHLY VIEWERSHIP
 select * from monthly_viewership where year = 2022 and quarter = 'q2'
+
+--- BELOW IS FOR POWR_SHARE UPDATES --- 
+
+-- Insert - Group Viewership
+insert into grouped_viewership (tot_viewership, year_month_day, year, month, quarter, partner, viewership_type)
+select sum(tot_viewership), year_month_day, year, month, quarter, 'powr' as partner, 'VOD' as viewership_type from monthly_viewership
+where year = 2022 and quarter = 'q2'
+group by year_month_day, year, month, quarter
+
+-- Check Grouped Viewership
+select * from grouped_viewership where year = 2022 and quarter = 'q2'
+
+-- update share on records
+    update powr_viewership p
+    set p.powr_share = q.powr_share
+    from
+    (
+    select p.id as id, p.WATCH_TIME_SECONDS / gv.tot_viewership as powr_share, p.year_month_day from powr_viewership p
+    join grouped_viewership gv on (gv.year_month_day = p.year_month_day)
+    where p.year = 2022 and p.quarter = 'q2' 
+    ) q
+    where p.id = q.id
+
+-- REV_PER_HOUR
+update powr_viewership
+        set rev_per_hov = rev_share / tot_hov
+        where year = 2021 and quarter ='q4' and rev_share != 0
+        
+        update powr_viewership
+        set rev_per_mov = rev_per_hov * 60
+        where year = 2021 and quarter ='q4' and rev_share != 0
+        
+        
+        update powr_viewership
+        set rev_per_hov = 0
+        where year = 2021 and quarter ='q4' and rev_share = 0 and rev_per_hov is null
+        
+        update powr_viewership
+        set rev_per_mov = 0
+        where year = 2021 and quarter ='q4' and rev_share = 0 and rev_per_mov is null

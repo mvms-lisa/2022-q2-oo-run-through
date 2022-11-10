@@ -26,7 +26,7 @@
     ) q 
     where p.id = q.id 
 
-    -- mobile/web update (updated 9/6/22)
+    -- mobile/web update
     update powr_viewership  p
     set p.rev_share = q.rev_share
     from(
