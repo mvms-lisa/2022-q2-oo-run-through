@@ -1,13 +1,13 @@
--- Notes: POWR_SHARE uses grouped_viewership while dept_share uses monthly_viewership
+-- Notes: POWR_SHARE uses grouped_viewership while DEPT_SHARE uses monthly_viewership
 
-insert into grouped_viewership (tot_viewership, year_month_day)
-select sum(tot_viewership), year_month_day from monthly_viewership
+-- Insert - Group Viewership
+insert into grouped_viewership (tot_viewership, year_month_day, year, month, quarter, partner, viewership_type)
+select sum(tot_viewership), year_month_day, year, month, quarter, 'powr' as partner, 'VOD' as viewership_type from monthly_viewership
 where year = 2022 and quarter = 'q2'
-group by year_month_day
+group by year_month_day, year, month, quarter
 
-update grouped_viewership
-set year = 2022, quarter = 'q2', partner = 'powr', viewership_type = 'VOD', month = 6
-where year_month_day = 20220601
+-- Check Grouped Viewership
+select * from grouped_viewership where year = 2022 and quarter = 'q2'
 
 -- update share on records
     update powr_viewership p
