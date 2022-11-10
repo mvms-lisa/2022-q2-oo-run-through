@@ -45,6 +45,26 @@ select * from powr_viewership where year = 2022 and quarter = 'q2' and platform 
 -- Check MONTHLY VIEWERSHIP
 select * from monthly_viewership where year = 2022 and quarter = 'q2'
 
+-- Check POWR dept_share
+select sum(dept_share), department_id from powr_viewership where year = 2022 and quarter = 'q2' and department_id is not null
+group by department_id
+
+-- Check POWR dept_share (mobile/web)
+select sum(dept_share) from powr_viewership where year = 2022 and quarter = 'q2' and department_id in (1,3,4)
+group by year_month_day
+
+-- Check POWR dept_share (FireTV)
+select sum(dept_share) from powr_viewership where year = 2022 and quarter = 'q2' and department_id = 2
+group by year_month_day
+
+-- Check POWR dept_share (Roku)
+select sum(dept_share) from powr_viewership where year = 2022 and quarter = 'q2' and department_id = 5
+group by year_month_day
+
+-- Check POWR_VIEWERSHIP Table
+select * from powr_viewership where year = 2022 and quarter = 'q2' 
+
+
 --- BELOW IS FOR POWR_SHARE UPDATES --- 
 
 -- Insert - Group Viewership
