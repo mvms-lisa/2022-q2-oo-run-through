@@ -35,3 +35,9 @@
         where r.department_id = 6 and p.year = 2022 and p.quarter = 'q2'
     ) q 
     where p.id = q.id
+
+-- Check REV_SHARE (Topline Total)
+select sum(rev_share) from powr_viewership where year = 2021 and quarter = 'q1'
+
+-- Check MONTHLY_REVENUE Topline Total
+select sum(tot_revenue) from monthly_revenue where year = 2021 and quarter = 'q1' 
