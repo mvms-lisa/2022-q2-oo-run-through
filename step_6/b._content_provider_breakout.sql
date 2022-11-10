@@ -105,9 +105,11 @@ insert into register (
     month,
     quarter,
     label,
-    type
+    type,
+    viewership_type
 )
-select c.year_month_day, c.department_id, c.content_provider, c.cp_share * mr.tot_revenue as amount, mr.description, title, c.year, c.month, c.quarter, 'Revenue' as label, type from content_provider_share c
+select c.year_month_day, c.department_id, c.content_provider, c.cp_share * mr.tot_revenue as amount, 
+mr.description, title, c.year, c.month, c.quarter, 'Revenue' as label, mr.type, c.viewership_type from content_provider_share c
 join monthly_revenue mr on (mr.department_id = c.department_id and mr.year_month_day = c.year_month_day)
 where  mr.department_id is not null and c.year = 2022 and c.quarter = 'q2' 
 
